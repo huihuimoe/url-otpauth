@@ -7,7 +7,7 @@
 --------------------------------------------------------------------------------
 
 This library can be used to parse `otpauth://` URIs used by Google Authenticator as defined in [this
-wiki page](https://code.google.com/p/google-authenticator/wiki/KeyUriFormat). This is the same
+wiki page](https://github.com/google/google-authenticator/wiki/Key-Uri-Format). This is the same
 format commonly used in QR Code for use with Google Authenticator.
 
 

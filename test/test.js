@@ -84,13 +84,35 @@ describe('url-otpauth', function () {
         });
     });
 
-    it('should properly deconstruct an otpauth URL with issue in the parameters and without issuer in the label', function () {
+    it('should properly deconstruct an otpauth URL with issuer in the parameters and without issuer in the label', function () {
         assert.deepEqual(otpauth.parse('otpauth://totp/github.com/alice?issuer=GitHub&secret=JBSWY3DPEHPK3PXP'), {
             account: 'github.com/alice',
             digits: 6,
             issuer: 'GitHub',
             key: 'JBSWY3DPEHPK3PXP',
             type: 'totp'
+        });
+    });
+
+    it('should properly deconstruct an otpauth URL with algorithm', function () {
+        assert.deepEqual(otpauth.parse('otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example&algorithm=SHA512'), {
+            account: 'alice@google.com',
+            digits: 6,
+            issuer: 'Example',
+            key: 'JBSWY3DPEHPK3PXP',
+            type: 'totp',
+            algorithm: 'SHA512'
+        });
+    });
+
+    it('should properly deconstruct an otpauth URL with period', function () {
+        assert.deepEqual(otpauth.parse('otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example&period=30'), {
+            account: 'alice@google.com',
+            digits: 6,
+            issuer: 'Example',
+            key: 'JBSWY3DPEHPK3PXP',
+            type: 'totp',
+            period: 30
         });
     });
 
@@ -143,6 +165,18 @@ describe('url-otpauth', function () {
     it('should fail with an error for HOTP URIs missing the counter', function () {
         assert.throws(function () {
             otpauth.parse('otpauth://hotp/alice@google.com?secret=JBSWY3DPEHPK3PXP');
+        }, otpauth.OtpauthInvalidURL);
+    });
+
+    it('should fail with an error for digits parameter out of bounds', function () {
+        assert.throws(function () {
+            otpauth.parse('otpauth://hotp/alice@google.com?secret=JBSWY3DPEHPK3PXP&digits=7');
+        }, otpauth.OtpauthInvalidURL);
+    });
+
+    it('should fail with an error for unknown algorithm', function () {
+        assert.throws(function () {
+            otpauth.parse('otpauth://hotp/alice@google.com?secret=JBSWY3DPEHPK3PXP&algorithm=SHA2');
         }, otpauth.OtpauthInvalidURL);
     });
 });

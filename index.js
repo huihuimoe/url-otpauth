@@ -38,8 +38,14 @@ var ErrorType = {
     MISSING_COUNTER: 4,
     MISSING_ISSUER: 5,
     MISSING_SECRET_KEY: 6,
-    UNKNOWN_OTP: 7
+    UNKNOWN_OTP: 7,
+    INVALID_DIGITS: 8,
+    UNKNOWN_ALGORITHM: 9
 };
+
+var PossibleDigits = [6, 8];
+
+var PossibleAlgorithms = ["SHA1", "SHA256", "SHA512", "MD5"];
 
 function OtpauthInvalidURL(errorType) {
     this.name = 'OtpauthInvalidURL';
@@ -153,7 +159,30 @@ module.exports = {
         ret.digits = 6;  // Default is 6
 
         if (parameters.digits) {
-            ret.digits = parseInt(parameters.digits, 10);
+            var parsedDigits = parseInt(parameters.digits, 10);
+            if (PossibleDigits.indexOf(parsedDigits) == -1) {
+                throw new OtpauthInvalidURL(ErrorType.INVALID_DIGITS);
+            } else {
+                ret.digits = parsedDigits;
+            }
+        }
+
+        // Algorithm to create hash
+        if (parameters.algorithm) {
+            if (PossibleAlgorithms.indexOf(parameters.algorithm) == -1) {
+                throw new OtpauthInvalidURL(ErrorType.UNKNOWN_ALGORITHM);
+            } else {
+                // Optional 'algorithm' parameter.
+                ret.algorithm = parameters.algorithm;
+            }
+        }
+
+        // Period (only for TOTP)
+        if (otpAlgo === 'totp') {
+            // Optional 'period' parameter for TOTP.
+            if (parameters.period) {
+                ret.period = parseFloat(parameters.period);
+            }
         }
 
         // Counter (only for HOTP)

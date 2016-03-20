@@ -84,6 +84,16 @@ describe('url-otpauth', function () {
         });
     });
 
+    it('should properly deconstruct an otpauth URL with issue in the parameters and without issuer in the label', function () {
+        assert.deepEqual(otpauth.parse('otpauth://totp/github.com/alice?issuer=GitHub&secret=JBSWY3DPEHPK3PXP'), {
+            account: 'github.com/alice',
+            digits: 6,
+            issuer: 'GitHub',
+            key: 'JBSWY3DPEHPK3PXP',
+            type: 'totp'
+        });
+    });
+
     it('should fail with an error parsing an URL with a wrong protocol', function onWrong() {
         assert.throws(function () {
             otpauth.parse('bogus');
@@ -121,12 +131,6 @@ describe('url-otpauth', function () {
     it('should fail when the account name is present but issuer is expected but missing', function () {
         assert.throws(function () {
             otpauth.parse('otpauth://totp/:alice@google.com?secret=JBSWY3DPEHPK3PXP');
-        }, otpauth.OtpauthInvalidURL);
-    });
-
-    it('should throw an error if issuer parameter is present but missing in the label', function () {
-        assert.throws(function () {
-            otpauth.parse('otpauth://totp/alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example');
         }, otpauth.OtpauthInvalidURL);
     });
 

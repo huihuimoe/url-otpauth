@@ -23,62 +23,23 @@
 
 
 
+
 <section>
 
 <header>
-    <h2>
-    url-otpauth
-    </h2>
+    
+        
     
 </header>
 
 <article>
     <div class="container-overview">
     
-
-    
         
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
 
         
     
     </div>
-
-    
 
     
 
@@ -93,24 +54,31 @@
     
         <h3 class="subsection-title">Members</h3>
 
-        <dl>
+        
             
-<dt>
-    <h4 class="name" id="ErrorType"><span class="type-signature">(static) </span>ErrorType<span class="type-signature"></span></h4>
+<h4 class="name" id=".ErrorType"><span class="type-signature">(static) </span>ErrorType<span class="type-signature"></span></h4>
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Enumeration of all error types raised by <code>OtpauthInvalidURL</code>.</p>
-    </div>
-    
 
-    
 
-    
+
+<div class="description">
+    <p>Enumeration of all error types raised by <code>OtpauthInvalidURL</code>.</p>
+</div>
+
+
+
+
+
+
+
 <dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -132,7 +100,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line174">line 174</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line204">line 204</a>
     </li></ul></dd>
     
 
@@ -144,31 +112,37 @@
 </dl>
 
 
-    
 
-    
-</dd>
+
+
 
         
             
-<dt>
-    <h4 class="name" id="OtpauthInvalidURL"><span class="type-signature">(static) </span>OtpauthInvalidURL<span class="type-signature"></span></h4>
+<h4 class="name" id=".OtpauthInvalidURL"><span class="type-signature">(static) </span>OtpauthInvalidURL<span class="type-signature"></span></h4>
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Exception thrown whenever there's an error deconstructing an 'otpauth://' URI.</p>
+
+
+
+<div class="description">
+    <p>Exception thrown whenever there's an error deconstructing an 'otpauth://' URI.</p>
 <p>You can query the <code>errorType</code> attribute to obtain the exact reason for failure. The
 <code>errorType</code> attributes contains a value from the <code>ErrorType</code> enumeration.</p>
-    </div>
-    
+</div>
 
-    
 
-    
+
+
+
+
+
 <dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -190,7 +164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line182">line 182</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -202,29 +176,29 @@
 </dl>
 
 
-    
 
-    
-</dd>
 
-        </dl>
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
 
-        <dl>
+        
             
-<dt>
-    <h4 class="name" id="parse"><span class="type-signature">(static) </span>parse<span class="signature">(rawUrl)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
-</dt>
-<dd>
+
+    <h4 class="name" id=".parse"><span class="type-signature">(static) </span>parse<span class="signature">(rawUrl)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
-    <div class="description">
-        <p>Parses an OTPAuth URI.</p>
+
+
+
+<div class="description">
+    <p>Parses an OTPAuth URI.</p>
 <p>Parses an URL as described in Google Authenticator's &quot;KeyUriFormat&quot; document (see:
 <a href="https://code.google.com/p/google-authenticator/wiki/KeyUriFormat">https://code.google.com/p/google-authenticator/wiki/KeyUriFormat</a>)
 and returns an object that contains the following properties:</p>
@@ -238,16 +212,18 @@ string.</li>
 </ul>
 <p>OTP of type <code>hotp</code> have an additional <code>counter</code> field which contains the start value for the
 HOTP counter. In all other cases this field is missing from the resulting object.</p>
-    </div>
-    
+</div>
 
-    
 
-    
 
+
+
+
+
+
+
+    <h5>Parameters:</h5>
     
-        <h5>Parameters:</h5>
-        
 
 <table class="params">
     <thead>
@@ -293,10 +269,20 @@ HOTP counter. In all other cases this field is missing from the resulting object
     
     </tbody>
 </table>
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
-<dl class="details">
+
+    
+
     
 
     
@@ -318,7 +304,7 @@ HOTP counter. In all other cases this field is missing from the resulting object
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line78">line 78</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -330,20 +316,20 @@ HOTP counter. In all other cases this field is missing from the resulting object
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
     <p>An object with properties described above.</p>
 </div>
@@ -362,12 +348,11 @@ HOTP counter. In all other cases this field is missing from the resulting object
     </dd>
 </dl>
 
-        
-
     
-</dd>
 
-        </dl>
+
+
+        
     
 
     
@@ -383,13 +368,13 @@ HOTP counter. In all other cases this field is missing from the resulting object
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-url-otpauth.html">url-otpauth</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-url-otpauth.html">url-otpauth</a></li></ul>
 </nav>
 
-<br clear="both">
+<br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sun Oct 12 2014 11:28:32 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Mar 22 2016 19:02:39 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

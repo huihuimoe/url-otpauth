@@ -127,7 +127,6 @@ module.exports = {
         }
 
         ret.account = account;
-        ret.issuer = issuer;
 
         //
         // Parameters
@@ -143,10 +142,12 @@ module.exports = {
         ret.key = parameters.secret;
 
         // Issuer
-        if (parameters.issuer && (parameters.issuer !== issuer)) {
+        if (parameters.issuer && issuer && (parameters.issuer !== issuer)) {
             // If present, it must be equal to the "issuer" specified in the label.
             throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER);
         }
+
+        ret.issuer = issuer || parameters.issuer || '';
 
         // OTP digits
         ret.digits = 6;  // Default is 6

@@ -1,7 +1,7 @@
 # url-otpauth
 
-[![Build Status](http://img.shields.io/travis/lvillani/url-otpauth.svg?style=flat)](https://travis-ci.org/lvillani/url-otpauth)
-[![Coverage Status](http://img.shields.io/coveralls/lvillani/url-otpauth.svg?style=flat)](https://coveralls.io/r/lvillani/url-otpauth)
+[![Build Status](http://img.shields.io/travis/huihuimoe/url-otpauth-ng.svg?style=flat)](https://travis-ci.org/huihuimoe/url-otpauth-ng)
+[![Coverage Status](http://img.shields.io/coveralls/huihuimoe/url-otpauth-ng.svg?style=flat)](https://coveralls.io/r/huihuimoe/url-otpauth-ng)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://choosealicense.com/licenses/mit/)
 
 --------------------------------------------------------------------------------
@@ -16,10 +16,6 @@ format commonly used in QR Code for use with Google Authenticator.
 The package is available from NPM:
 
     npm install url-otpauth
-
-And from Bower:
-
-    bower install url-otpauth
 
 Documentation is avaiable in the `doc` folder and is available online
 [here](http://htmlpreview.github.io/?https://github.com/lvillani/url-otpauth/blob/master/doc/index.html).

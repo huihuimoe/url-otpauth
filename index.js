@@ -1,30 +1,10 @@
-//
-// The MIT License (MIT)
-//
-// Copyright (c) 2014 Lorenzo Villani
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//
+
+/*!
+* https://github.com/huihuimoe/url-otpauth-ng
+* Released under the MIT license
+*/
 
 /** @module url-otpauth */
-
-var url = require('url');
 
 //
 // Exception types
@@ -78,8 +58,17 @@ module.exports = {
      * OTP of type `hotp` have an additional `counter` field which contains the start value for the
      * HOTP counter. In all other cases this field is missing from the resulting object.
      *
+     * @typedef {Object} Result
+     * @prop {string} type
+     * @prop {string} account
+     * @prop {string} key
+     * @prop {string} [issuer]
+     * @prop {string} digits
+     * @prop {string} [algorithm]
+     * @prop {string} [period]
+     * @prop {string} [counter]
      * @param rawUrl {string} The URI to parse.
-     * @returns {Object} An object with properties described above.
+     * @returns {Result} An object with properties described above.
      */
     parse: function parse(rawUrl) {
         var ret = {};
@@ -88,11 +77,18 @@ module.exports = {
         // Protocol
         //
 
-        var parsed = url.parse(rawUrl, true);
+        try {
+            var parsed = new URL(rawUrl);
+        } catch (error) {
+            throw error instanceof TypeError ? new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL) : error;
+        }
 
         if (parsed.protocol !== 'otpauth:') {
             throw new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL);
         }
+
+        parsed.protocol = 'http';
+        parsed = new URL(parsed);
 
         //
         // Type
@@ -138,28 +134,28 @@ module.exports = {
         // Parameters
         //
 
-        var parameters = parsed.query;
+        var parameters = parsed.searchParams;
 
         // Secret key
-        if (!parameters.secret) {
+        if (!parameters.has('secret')) {
             throw new OtpauthInvalidURL(ErrorType.MISSING_SECRET_KEY);
         }
 
-        ret.key = parameters.secret;
+        ret.key = parameters.get('secret');
 
         // Issuer
-        if (parameters.issuer && issuer && (parameters.issuer !== issuer)) {
+        if (parameters.has('issuer') && issuer && (parameters.get('issuer') !== issuer)) {
             // If present, it must be equal to the "issuer" specified in the label.
             throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER);
         }
 
-        ret.issuer = issuer || parameters.issuer || '';
+        ret.issuer = issuer || parameters.get('issuer') || '';
 
         // OTP digits
         ret.digits = 6;  // Default is 6
 
-        if (parameters.digits) {
-            var parsedDigits = parseInt(parameters.digits, 10);
+        if (parameters.has('digits')) {
+            var parsedDigits = parseInt(parameters.get('digits'), 10);
             if (PossibleDigits.indexOf(parsedDigits) == -1) {
                 throw new OtpauthInvalidURL(ErrorType.INVALID_DIGITS);
             } else {
@@ -168,30 +164,30 @@ module.exports = {
         }
 
         // Algorithm to create hash
-        if (parameters.algorithm) {
-            if (PossibleAlgorithms.indexOf(parameters.algorithm) == -1) {
+        if (parameters.has('algorithm')) {
+            if (PossibleAlgorithms.indexOf(parameters.get('algorithm')) == -1) {
                 throw new OtpauthInvalidURL(ErrorType.UNKNOWN_ALGORITHM);
             } else {
                 // Optional 'algorithm' parameter.
-                ret.algorithm = parameters.algorithm;
+                ret.algorithm = parameters.get('algorithm');
             }
         }
 
         // Period (only for TOTP)
         if (otpAlgo === 'totp') {
             // Optional 'period' parameter for TOTP.
-            if (parameters.period) {
-                ret.period = parseFloat(parameters.period);
+            if (parameters.has('period')) {
+                ret.period = parseFloat(parameters.get('period'));
             }
         }
 
         // Counter (only for HOTP)
         if (otpAlgo === 'hotp') {
-            if (!parameters.counter) {
+            if (!parameters.has('counter')) {
                 // We require the 'counter' parameter for HOTP.
                 throw new OtpauthInvalidURL(ErrorType.MISSING_COUNTER);
             } else {
-                ret.counter = parseInt(parameters.counter, 10);
+                ret.counter = parseInt(parameters.get('counter'), 10);
             }
         }
 

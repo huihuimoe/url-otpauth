@@ -2,7 +2,6 @@
 
 All notable changes to this project are documented in this file.
 
-
 ## 2.0.0 - 2016-03-22
 
 * Allow uris with issuer on parameters or label (@rtfpessoa);

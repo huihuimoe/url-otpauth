@@ -7,6 +7,8 @@
 
 /** @module url-otpauth */
 
+var URL = URL || require('url').URL
+
 //
 // Exception types
 //
@@ -209,4 +211,4 @@ module.exports = {
     OtpauthInvalidURL: OtpauthInvalidURL
 };
 
-},{}]},{},[1]);
+},{"url":"url"}]},{},[1]);

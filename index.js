@@ -6,6 +6,8 @@
 
 /** @module url-otpauth */
 
+var URL = URL || require('url').URL
+
 //
 // Exception types
 //

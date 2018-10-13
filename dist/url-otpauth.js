@@ -8,7 +8,7 @@
 
 /** @module url-otpauth */
 
-var _URL = URL || global.require('url').URL
+var _URL = typeof URL !== 'undefined' ? URL : global.require('url').URL
 
 //
 // Exception types

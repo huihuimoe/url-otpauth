@@ -15,7 +15,7 @@ format commonly used in QR Code for use with Google Authenticator.
 
 The package is available from NPM:
 
-    npm install url-otpauth
+    npm install url-otpauth-ng
 
 Documentation is avaiable in the `doc` folder and is available online
 [here](http://htmlpreview.github.io/?https://github.com/lvillani/url-otpauth/blob/master/doc/index.html).

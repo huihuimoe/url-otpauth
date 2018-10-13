@@ -1,4 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function (global){
 
 /*!
 * https://github.com/huihuimoe/url-otpauth-ng
@@ -7,7 +8,7 @@
 
 /** @module url-otpauth */
 
-var URL = URL || require('url').URL
+var _URL = URL || global.require('url').URL
 
 //
 // Exception types
@@ -81,7 +82,7 @@ module.exports = {
         //
 
         try {
-            var parsed = new URL(rawUrl);
+            var parsed = new _URL(rawUrl);
         } catch (error) {
             throw error instanceof TypeError ? new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL) : error;
         }
@@ -91,7 +92,7 @@ module.exports = {
         }
 
         parsed.protocol = 'http';
-        parsed = new URL(parsed);
+        parsed = new _URL(parsed);
 
         //
         // Type
@@ -211,4 +212,5 @@ module.exports = {
     OtpauthInvalidURL: OtpauthInvalidURL
 };
 
-},{"url":"url"}]},{},[1]);
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[1]);

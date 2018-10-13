@@ -1,10 +1,10 @@
 all:
 	mkdir -p dist
 
-	./node_modules/.bin/browserify index.js -o dist/url-otpauth.js -x url
-	./node_modules/.bin/browserify -d index.js -o dist/url-otpauth.debug.js  -x url
+	./node_modules/.bin/browserify index.js -o dist/url-otpauth.js
+	./node_modules/.bin/browserify -d index.js -o dist/url-otpauth.debug.js
 	./node_modules/.bin/uglifyjs -o dist/url-otpauth.min.js --source-map filename=dist/url-otpauth.min.js.map dist/url-otpauth.js
-	./node_modules/.bin/browserify -d index.js -s url-otpauth -o dist/url-otpauth.browser.js -x url
+	./node_modules/.bin/browserify -d index.js -s url-otpauth-ng -o dist/url-otpauth.browser.js
 	./node_modules/.bin/uglifyjs -o dist/url-otpauth.browser.min.js --source-map filename=dist/url-otpauth.browser.min.js.map dist/url-otpauth.browser.js
 
 

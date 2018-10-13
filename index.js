@@ -6,7 +6,7 @@
 
 /** @module url-otpauth */
 
-var URL = URL || require('url').URL
+var _URL = URL || global.require('url').URL
 
 //
 // Exception types
@@ -80,7 +80,7 @@ module.exports = {
         //
 
         try {
-            var parsed = new URL(rawUrl);
+            var parsed = new _URL(rawUrl);
         } catch (error) {
             throw error instanceof TypeError ? new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL) : error;
         }
@@ -90,7 +90,7 @@ module.exports = {
         }
 
         parsed.protocol = 'http';
-        parsed = new URL(parsed);
+        parsed = new _URL(parsed);
 
         //
         // Type

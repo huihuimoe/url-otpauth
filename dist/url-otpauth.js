@@ -109,16 +109,16 @@ module.exports = {
         // Label (contains account name, may contain issuer)
         //
 
-        var label = decodeURIComponent(parsed.pathname.substring(1));
+        var label = parsed.pathname.substring(1);
         var labelComponents = label.split(':');
         var issuer = '';
         var account = '';
 
         if (labelComponents.length === 1) {
-            account = labelComponents[0];
+            account = decodeURIComponent(labelComponents[0]);
         } else if (labelComponents.length === 2) {
-            issuer = labelComponents[0];
-            account = labelComponents[1];
+            issuer = decodeURIComponent(labelComponents[0]);
+            account = decodeURIComponent(labelComponents[1]);
         } else {
             throw new OtpauthInvalidURL(ErrorType.INVALID_LABEL);
         }

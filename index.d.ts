@@ -32,8 +32,8 @@ export class OtpauthInvalidURL extends Error {
 
 interface UrlOtpauthNg {
     parse: typeof parse
-    ErrorType: ErrorType
-    OtpauthInvalidURL: OtpauthInvalidURL
+    ErrorType: typeof ErrorType
+    OtpauthInvalidURL: typeof OtpauthInvalidURL
 }
 
 declare const urlOtpauthNg: UrlOtpauthNg

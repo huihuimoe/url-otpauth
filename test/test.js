@@ -24,7 +24,7 @@
 
 var assert = require('chai').assert;
 
-var otpauth = require('../index');
+var otpauth = require('../dist/url-otpauth-ng');
 
 
 describe('url-otpauth', function () {

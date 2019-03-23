@@ -1,4 +1,4 @@
-export interface otpResult {
+export interface IOtpParseResult {
     type: string
     account: string
     key: string
@@ -9,10 +9,31 @@ export interface otpResult {
     counter?: string
 }
 
-export type URLLike = string | URL
+type URLLike = string | URL
 
-declare const urlOtpauth = {
-    parse(url: URLLike): otpResult
+export function parse(url: URLLike): IOtpParseResult
+
+export enum ErrorType {
+    INVALID_ISSUER = 0,
+    INVALID_LABEL,
+    INVALID_PROTOCOL,
+    MISSING_ACCOUNT_NAME,
+    MISSING_COUNTER,
+    MISSING_ISSUER,
+    MISSING_SECRET_KEY,
+    UNKNOWN_OTP,
+    INVALID_DIGITS,
+    UNKNOWN_ALGORITHM
 }
 
-export = urlOtpauth
+export class OtpauthInvalidURL extends Error {
+    constructor(errorType: ErrorType)
+}
+
+interface UrlOtpauthNg {
+    parse: typeof parse
+    ErrorType: ErrorType
+    OtpauthInvalidURL: OtpauthInvalidURL
+}
+
+declare const urlOtpauthNg: UrlOtpauthNg

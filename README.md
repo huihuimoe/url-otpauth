@@ -15,4 +15,16 @@ format commonly used in QR Code for use with Google Authenticator.
 
 The package is available from NPM:
 
-    npm install url-otpauth-ng
+`npm install url-otpauth-ng`
+
+In browser:
+
+Using `<script src="//unpkg.com/url-otpauth-ng"></script>`
+
+Or using esm:
+
+```javascript
+<script type="module">
+  import { parse } from '//unpkg.com/url-otpauth-ng/dist/url-otpauth-ng.esm.mjs'
+</script>
+```

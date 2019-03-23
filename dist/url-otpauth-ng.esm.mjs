@@ -3,7 +3,7 @@
  * Released under the MIT license
  */
 
-const _URL = typeof URL !== 'undefined' ? URL : require('url').URL
+const _URL = typeof URL !== 'undefined' ? URL : require('url').URL;
 
 //
 // Exception types
@@ -12,7 +12,7 @@ const _URL = typeof URL !== 'undefined' ? URL : require('url').URL
 /**
  * Enumeration of all error types raised by `OtpauthInvalidURL`.
  */
-export const ErrorType = {
+const ErrorType = {
     INVALID_ISSUER: 0,
     INVALID_LABEL: 1,
     INVALID_PROTOCOL: 2,
@@ -23,7 +23,7 @@ export const ErrorType = {
     UNKNOWN_OTP: 7,
     INVALID_DIGITS: 8,
     UNKNOWN_ALGORITHM: 9
-}
+};
 
 /**
  * Exception thrown whenever there's an error deconstructing an 'otpauth://' URI.
@@ -31,16 +31,16 @@ export const ErrorType = {
  * You can query the `errorType` attribute to obtain the exact reason for failure. The
  * `errorType` attributes contains a value from the `ErrorType` enumeration.
  */
-export function OtpauthInvalidURL(errorType) {
-    this.name = 'OtpauthInvalidURL'
-    this.message = 'Given otpauth:// URL is invalid. (Error ' + errorType + ')'
-    this.errorType = errorType
+function OtpauthInvalidURL(errorType) {
+    this.name = 'OtpauthInvalidURL';
+    this.message = 'Given otpauth:// URL is invalid. (Error ' + errorType + ')';
+    this.errorType = errorType;
 }
-OtpauthInvalidURL.prototype = new Error()
-OtpauthInvalidURL.prototype.constructor = OtpauthInvalidURL
+OtpauthInvalidURL.prototype = new Error();
+OtpauthInvalidURL.prototype.constructor = OtpauthInvalidURL;
 
-const PossibleDigits = [6, 8]
-const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5']
+const PossibleDigits = [6, 8];
+const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5'];
 
 /**
  * Parses an OTPAuth URI.
@@ -59,16 +59,16 @@ const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5']
  * HOTP counter. In all other cases this field is missing from the resulting object.
  *
  **/
-export function parse(rawUrl) {
-    const ret = {}
+function parse(rawUrl) {
+    const ret = {};
 
     //
     // Protocol
     //
-    let parsed
+    let parsed;
 
     try {
-        parsed = new _URL(rawUrl)
+        parsed = new _URL(rawUrl);
     } catch (error) {
         throw error instanceof TypeError
             ? new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)
@@ -79,35 +79,35 @@ export function parse(rawUrl) {
         throw new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)
     }
 
-    parsed.protocol = 'http'
-    parsed = new _URL(parsed)
+    parsed.protocol = 'http';
+    parsed = new _URL(parsed);
 
     //
     // Type
     //
 
-    const otpAlgo = decodeURIComponent(parsed.host)
+    const otpAlgo = decodeURIComponent(parsed.host);
 
     if (otpAlgo !== 'hotp' && otpAlgo !== 'totp') {
         throw new OtpauthInvalidURL(ErrorType.UNKNOWN_OTP)
     }
 
-    ret.type = otpAlgo
+    ret.type = otpAlgo;
 
     //
     // Label (contains account name, may contain issuer)
     //
 
-    const label = parsed.pathname.substring(1)
-    const labelComponents = label.split(~label.indexOf(':') ? ':' : '%3A')
-    let issuer = ''
-    let account = ''
+    const label = parsed.pathname.substring(1);
+    const labelComponents = label.split(~label.indexOf(':') ? ':' : '%3A');
+    let issuer = '';
+    let account = '';
 
     if (labelComponents.length === 1) {
-        account = decodeURIComponent(labelComponents[0])
+        account = decodeURIComponent(labelComponents[0]);
     } else if (labelComponents.length === 2) {
-        issuer = decodeURIComponent(labelComponents[0])
-        account = decodeURIComponent(labelComponents[1])
+        issuer = decodeURIComponent(labelComponents[0]);
+        account = decodeURIComponent(labelComponents[1]);
     } else {
         throw new OtpauthInvalidURL(ErrorType.INVALID_LABEL)
     }
@@ -120,20 +120,20 @@ export function parse(rawUrl) {
         throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER)
     }
 
-    ret.account = account
+    ret.account = account;
 
     //
     // Parameters
     //
 
-    const parameters = parsed.searchParams
+    const parameters = parsed.searchParams;
 
     // Secret key
     if (!parameters.has('secret')) {
         throw new OtpauthInvalidURL(ErrorType.MISSING_SECRET_KEY)
     }
 
-    ret.key = parameters.get('secret')
+    ret.key = parameters.get('secret');
 
     // Issuer
     if (
@@ -145,17 +145,17 @@ export function parse(rawUrl) {
         throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER)
     }
 
-    ret.issuer = issuer || parameters.get('issuer') || ''
+    ret.issuer = issuer || parameters.get('issuer') || '';
 
     // OTP digits
-    ret.digits = 6 // Default is 6
+    ret.digits = 6; // Default is 6
 
     if (parameters.has('digits')) {
-        const parsedDigits = parseInt(parameters.get('digits'), 10)
+        const parsedDigits = parseInt(parameters.get('digits'), 10);
         if (PossibleDigits.indexOf(parsedDigits) == -1) {
             throw new OtpauthInvalidURL(ErrorType.INVALID_DIGITS)
         } else {
-            ret.digits = parsedDigits
+            ret.digits = parsedDigits;
         }
     }
 
@@ -165,7 +165,7 @@ export function parse(rawUrl) {
             throw new OtpauthInvalidURL(ErrorType.UNKNOWN_ALGORITHM)
         } else {
             // Optional 'algorithm' parameter.
-            ret.algorithm = parameters.get('algorithm')
+            ret.algorithm = parameters.get('algorithm');
         }
     }
 
@@ -173,7 +173,7 @@ export function parse(rawUrl) {
     if (otpAlgo === 'totp') {
         // Optional 'period' parameter for TOTP.
         if (parameters.has('period')) {
-            ret.period = parseFloat(parameters.get('period'))
+            ret.period = parseFloat(parameters.get('period'));
         }
     }
 
@@ -183,9 +183,12 @@ export function parse(rawUrl) {
             // We require the 'counter' parameter for HOTP.
             throw new OtpauthInvalidURL(ErrorType.MISSING_COUNTER)
         } else {
-            ret.counter = parseInt(parameters.get('counter'), 10)
+            ret.counter = parseInt(parameters.get('counter'), 10);
         }
     }
 
     return ret
 }
+
+export { ErrorType, OtpauthInvalidURL, parse };
+//# sourceMappingURL=url-otpauth-ng.esm.mjs.map

@@ -1,3 +1,9 @@
+/*!
+* url-otpauth-ng v3.1.0
+* https://github.com/huihuimoe/url-otpauth-ng
+* Released under the MIT license
+*/
+
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -39,6 +45,7 @@
      * `errorType` attributes contains a value from the `ErrorType` enumeration.
      */
     class OtpauthInvalidURL extends Error {
+        /** @param {number} errorType */
         constructor(errorType) {
             super();
             this.name = 'OtpauthInvalidURL';
@@ -52,6 +59,12 @@
 
     const _URL = typeof URL !== 'undefined' ? URL : require('url').URL;
 
+    const PossibleType = [
+        'totp',
+        'hotp',
+        /* non-standard type Yandex */
+        'yaotp'
+    ];
     const PossibleDigits = [6, 8];
     const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5'];
 
@@ -71,6 +84,7 @@
      * OTP of type `hotp` have an additional `counter` field which contains the start value for the
      * HOTP counter. In all other cases this field is missing from the resulting object.
      *
+     * @param {string | URL} rawUrl
      **/
     function parse(rawUrl) {
         const decode = decodeURIComponent;
@@ -86,7 +100,7 @@
         }
 
         // hack for Chrome
-        parsed.protocol = 'http';
+        parsed.protocol = 'ftp';
         parsed = new _URL(parsed);
 
         //
@@ -95,7 +109,7 @@
 
         const otpAlgo = decode(parsed.host);
 
-        if (otpAlgo !== 'hotp' && otpAlgo !== 'totp') {
+        if (!~PossibleType.indexOf(otpAlgo)) {
             throw new OtpauthInvalidURL(UNKNOWN_OTP)
         }
 
@@ -198,11 +212,6 @@
 
         return ret
     }
-
-    /*!
-     * https://github.com/huihuimoe/url-otpauth-ng
-     * Released under the MIT license
-     */
 
     exports.ErrorType = ErrorType;
     exports.OtpauthInvalidURL = OtpauthInvalidURL;

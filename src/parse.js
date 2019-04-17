@@ -30,13 +30,7 @@ export function parse(rawUrl) {
     //
     // Protocol
     //
-    let parsed
-
-    try {
-        parsed = new _URL(rawUrl)
-    } catch (e) {
-        throw new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)
-    }
+    let parsed = new _URL(rawUrl)
 
     if (parsed.protocol !== 'otpauth:') {
         throw new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)

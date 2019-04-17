@@ -119,7 +119,7 @@ describe('url-otpauth', function () {
     it('should fail with an error parsing an URL with a wrong protocol', function onWrong() {
         assert.throws(function () {
             otpauth.parse('bogus');
-        }, otpauth.OtpauthInvalidURL);
+        }, TypeError);
 
         assert.throws(function () {
             otpauth.parse('nototpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example');

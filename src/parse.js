@@ -57,10 +57,9 @@ export function parse(rawUrl) {
     //
 
     const label = parsed.pathname.substring(1)
-    const labelComponents = label.split(
-        ~label.indexOf(':') ? /:(.*)/ : /%3A(.*)/,
-        2
-    )
+    // if you want to support mutli commas in label
+    // const labelComponents = label.split(~label.indexOf(':') ? /:(.*)/ : /%3A(.*)/, 2)
+    const labelComponents = label.split(~label.indexOf(':') ? ':' : '%3A')
     let issuer = ''
     let account = ''
 

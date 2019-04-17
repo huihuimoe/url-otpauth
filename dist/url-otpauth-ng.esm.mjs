@@ -1,29 +1,30 @@
-/*!
- * https://github.com/huihuimoe/url-otpauth-ng
- * Released under the MIT license
- */
-
-const _URL = typeof URL !== 'undefined' ? URL : require('url').URL;
-
-//
-// Exception types
-//
-
 /**
  * Enumeration of all error types raised by `OtpauthInvalidURL`.
  */
-const ErrorType = {
-    INVALID_ISSUER: 0,
-    INVALID_LABEL: 1,
-    INVALID_PROTOCOL: 2,
-    MISSING_ACCOUNT_NAME: 3,
-    MISSING_COUNTER: 4,
-    MISSING_ISSUER: 5,
-    MISSING_SECRET_KEY: 6,
-    UNKNOWN_OTP: 7,
-    INVALID_DIGITS: 8,
-    UNKNOWN_ALGORITHM: 9
-};
+
+const INVALID_ISSUER = 0;
+const INVALID_LABEL = 1;
+const INVALID_PROTOCOL = 2;
+const MISSING_ACCOUNT_NAME = 3;
+const MISSING_COUNTER = 4;
+const MISSING_ISSUER = 5;
+const MISSING_SECRET_KEY = 6;
+const UNKNOWN_OTP = 7;
+const INVALID_DIGITS = 8;
+const UNKNOWN_ALGORITHM = 9;
+
+var ErrorType = ({
+    INVALID_ISSUER: INVALID_ISSUER,
+    INVALID_LABEL: INVALID_LABEL,
+    INVALID_PROTOCOL: INVALID_PROTOCOL,
+    MISSING_ACCOUNT_NAME: MISSING_ACCOUNT_NAME,
+    MISSING_COUNTER: MISSING_COUNTER,
+    MISSING_ISSUER: MISSING_ISSUER,
+    MISSING_SECRET_KEY: MISSING_SECRET_KEY,
+    UNKNOWN_OTP: UNKNOWN_OTP,
+    INVALID_DIGITS: INVALID_DIGITS,
+    UNKNOWN_ALGORITHM: UNKNOWN_ALGORITHM
+});
 
 /**
  * Exception thrown whenever there's an error deconstructing an 'otpauth://' URI.
@@ -31,16 +32,19 @@ const ErrorType = {
  * You can query the `errorType` attribute to obtain the exact reason for failure. The
  * `errorType` attributes contains a value from the `ErrorType` enumeration.
  */
-function OtpauthInvalidURL(errorType) {
-    this.name = 'OtpauthInvalidURL';
-    this.errorType = errorType;
-    for (const type in ErrorType)
-        if (ErrorType[type] === errorType)
-            this.message =
-                'Given otpauth:// URL is invalid. (Error ' + type + ')';
+class OtpauthInvalidURL extends Error {
+    constructor(errorType) {
+        super();
+        this.name = 'OtpauthInvalidURL';
+        this.errorType = errorType;
+        for (const type in ErrorType)
+            if (ErrorType[type] === errorType)
+                this.message =
+                    'Given otpauth:// URL is invalid. (Error ' + type + ')';
+    }
 }
-OtpauthInvalidURL.prototype = new Error();
-OtpauthInvalidURL.prototype.constructor = OtpauthInvalidURL;
+
+const _URL = typeof URL !== 'undefined' ? URL : require('url').URL;
 
 const PossibleDigits = [6, 8];
 const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5'];
@@ -69,20 +73,13 @@ function parse(rawUrl) {
     //
     // Protocol
     //
-    let parsed;
-
-    try {
-        parsed = new _URL(rawUrl);
-    } catch (error) {
-        throw error instanceof TypeError
-            ? new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)
-            : error
-    }
+    let parsed = new _URL(rawUrl);
 
     if (parsed.protocol !== 'otpauth:') {
-        throw new OtpauthInvalidURL(ErrorType.INVALID_PROTOCOL)
+        throw new OtpauthInvalidURL(INVALID_PROTOCOL)
     }
 
+    // hack for Chrome
     parsed.protocol = 'http';
     parsed = new _URL(parsed);
 
@@ -93,7 +90,7 @@ function parse(rawUrl) {
     const otpAlgo = decode(parsed.host);
 
     if (otpAlgo !== 'hotp' && otpAlgo !== 'totp') {
-        throw new OtpauthInvalidURL(ErrorType.UNKNOWN_OTP)
+        throw new OtpauthInvalidURL(UNKNOWN_OTP)
     }
 
     ret.type = otpAlgo;
@@ -103,6 +100,8 @@ function parse(rawUrl) {
     //
 
     const label = parsed.pathname.substring(1);
+    // if you want to support mutli commas in label
+    // const labelComponents = label.split(~label.indexOf(':') ? /:(.*)/ : /%3A(.*)/, 2)
     const labelComponents = label.split(~label.indexOf(':') ? ':' : '%3A');
     let issuer = '';
     let account = '';
@@ -113,15 +112,15 @@ function parse(rawUrl) {
         issuer = decode(labelComponents[0]);
         account = decode(labelComponents[1]);
     } else {
-        throw new OtpauthInvalidURL(ErrorType.INVALID_LABEL)
+        throw new OtpauthInvalidURL(INVALID_LABEL)
     }
 
     if (account.length < 1) {
-        throw new OtpauthInvalidURL(ErrorType.MISSING_ACCOUNT_NAME)
+        throw new OtpauthInvalidURL(MISSING_ACCOUNT_NAME)
     }
 
     if (labelComponents.length === 2 && issuer.length < 1) {
-        throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER)
+        throw new OtpauthInvalidURL(INVALID_ISSUER)
     }
 
     ret.account = account;
@@ -134,7 +133,7 @@ function parse(rawUrl) {
 
     // Secret key
     if (!parameters.has('secret')) {
-        throw new OtpauthInvalidURL(ErrorType.MISSING_SECRET_KEY)
+        throw new OtpauthInvalidURL(MISSING_SECRET_KEY)
     }
 
     ret.key = parameters.get('secret');
@@ -146,7 +145,7 @@ function parse(rawUrl) {
         parameters.get('issuer') !== issuer
     ) {
         // If present, it must be equal to the "issuer" specified in the label.
-        throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER)
+        throw new OtpauthInvalidURL(INVALID_ISSUER)
     }
 
     ret.issuer = parameters.get('issuer') || issuer;
@@ -155,21 +154,21 @@ function parse(rawUrl) {
     ret.digits = 6; // Default is 6
 
     if (parameters.has('digits')) {
-        const parsedDigits = parseInt(parameters.get('digits'), 10);
-        if (PossibleDigits.indexOf(parsedDigits) == -1) {
-            throw new OtpauthInvalidURL(ErrorType.INVALID_DIGITS)
-        } else {
+        const parsedDigits = parseInt(parameters.get('digits')) || 0;
+        if (~PossibleDigits.indexOf(parsedDigits)) {
             ret.digits = parsedDigits;
+        } else {
+            throw new OtpauthInvalidURL(INVALID_DIGITS)
         }
     }
 
     // Algorithm to create hash
     if (parameters.has('algorithm')) {
-        if (PossibleAlgorithms.indexOf(parameters.get('algorithm')) == -1) {
-            throw new OtpauthInvalidURL(ErrorType.UNKNOWN_ALGORITHM)
-        } else {
+        if (~PossibleAlgorithms.indexOf(parameters.get('algorithm'))) {
             // Optional 'algorithm' parameter.
             ret.algorithm = parameters.get('algorithm');
+        } else {
+            throw new OtpauthInvalidURL(UNKNOWN_ALGORITHM)
         }
     }
 
@@ -177,22 +176,27 @@ function parse(rawUrl) {
     if (otpAlgo === 'totp') {
         // Optional 'period' parameter for TOTP.
         if (parameters.has('period')) {
-            ret.period = parseFloat(parameters.get('period'));
+            ret.period = parseFloat(parameters.get('period')) || 0;
         }
     }
 
     // Counter (only for HOTP)
     if (otpAlgo === 'hotp') {
-        if (!parameters.has('counter')) {
-            // We require the 'counter' parameter for HOTP.
-            throw new OtpauthInvalidURL(ErrorType.MISSING_COUNTER)
+        if (parameters.has('counter')) {
+            ret.counter = parseInt(parameters.get('counter')) || 0;
         } else {
-            ret.counter = parseInt(parameters.get('counter'), 10);
+            // We require the 'counter' parameter for HOTP.
+            throw new OtpauthInvalidURL(MISSING_COUNTER)
         }
     }
 
     return ret
 }
+
+/*!
+ * https://github.com/huihuimoe/url-otpauth-ng
+ * Released under the MIT license
+ */
 
 export { ErrorType, OtpauthInvalidURL, parse };
 //# sourceMappingURL=url-otpauth-ng.esm.mjs.map

@@ -39,8 +39,11 @@
      */
     function OtpauthInvalidURL(errorType) {
         this.name = 'OtpauthInvalidURL';
-        this.message = 'Given otpauth:// URL is invalid. (Error ' + errorType + ')';
         this.errorType = errorType;
+        for (const type in ErrorType)
+            if (ErrorType[type] === errorType)
+                this.message =
+                    'Given otpauth:// URL is invalid. (Error ' + type + ')';
     }
     OtpauthInvalidURL.prototype = new Error();
     OtpauthInvalidURL.prototype.constructor = OtpauthInvalidURL;
@@ -66,6 +69,7 @@
      *
      **/
     function parse(rawUrl) {
+        const decode = decodeURIComponent;
         const ret = {};
 
         //
@@ -92,7 +96,7 @@
         // Type
         //
 
-        const otpAlgo = decodeURIComponent(parsed.host);
+        const otpAlgo = decode(parsed.host);
 
         if (otpAlgo !== 'hotp' && otpAlgo !== 'totp') {
             throw new OtpauthInvalidURL(ErrorType.UNKNOWN_OTP)
@@ -110,10 +114,10 @@
         let account = '';
 
         if (labelComponents.length === 1) {
-            account = decodeURIComponent(labelComponents[0]);
+            account = decode(labelComponents[0]);
         } else if (labelComponents.length === 2) {
-            issuer = decodeURIComponent(labelComponents[0]);
-            account = decodeURIComponent(labelComponents[1]);
+            issuer = decode(labelComponents[0]);
+            account = decode(labelComponents[1]);
         } else {
             throw new OtpauthInvalidURL(ErrorType.INVALID_LABEL)
         }
@@ -151,7 +155,7 @@
             throw new OtpauthInvalidURL(ErrorType.INVALID_ISSUER)
         }
 
-        ret.issuer = issuer || parameters.get('issuer') || '';
+        ret.issuer = parameters.get('issuer') || issuer;
 
         // OTP digits
         ret.digits = 6; // Default is 6

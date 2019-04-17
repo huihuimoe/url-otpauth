@@ -115,7 +115,7 @@ export function parse(rawUrl) {
     ret.digits = 6 // Default is 6
 
     if (parameters.has('digits')) {
-        const parsedDigits = parseInt(parameters.get('digits'))
+        const parsedDigits = parseInt(parameters.get('digits')) || 0
         if (~PossibleDigits.indexOf(parsedDigits)) {
             ret.digits = parsedDigits
         } else {
@@ -137,17 +137,17 @@ export function parse(rawUrl) {
     if (otpAlgo === 'totp') {
         // Optional 'period' parameter for TOTP.
         if (parameters.has('period')) {
-            ret.period = parseFloat(parameters.get('period'))
+            ret.period = parseFloat(parameters.get('period')) || 0
         }
     }
 
     // Counter (only for HOTP)
     if (otpAlgo === 'hotp') {
-        if (!parameters.has('counter')) {
+        if (parameters.has('counter')) {
+            ret.counter = parseInt(parameters.get('counter')) || 0
+        } else {
             // We require the 'counter' parameter for HOTP.
             throw new OtpauthInvalidURL(ErrorType.MISSING_COUNTER)
-        } else {
-            ret.counter = parseInt(parameters.get('counter'))
         }
     }
 

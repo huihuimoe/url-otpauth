@@ -3,6 +3,12 @@ import { OtpauthInvalidURL } from './OtpauthInvalidURL'
 
 const _URL = typeof URL !== 'undefined' ? URL : require('url').URL
 
+const PossibleType = [
+    'totp',
+    'hotp',
+    /* non-standard type Yandex */
+    'yaotp'
+]
 const PossibleDigits = [6, 8]
 const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5']
 
@@ -37,7 +43,7 @@ export function parse(rawUrl) {
     }
 
     // hack for Chrome
-    parsed.protocol = 'http'
+    parsed.protocol = 'ftp'
     parsed = new _URL(parsed)
 
     //
@@ -46,7 +52,7 @@ export function parse(rawUrl) {
 
     const otpAlgo = decode(parsed.host)
 
-    if (otpAlgo !== 'hotp' && otpAlgo !== 'totp') {
+    if (!~PossibleType.indexOf(otpAlgo)) {
         throw new OtpauthInvalidURL(ErrorType.UNKNOWN_OTP)
     }
 

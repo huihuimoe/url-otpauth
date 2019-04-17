@@ -7,6 +7,7 @@ import * as ErrorType from './ErrorType'
  * `errorType` attributes contains a value from the `ErrorType` enumeration.
  */
 class OtpauthInvalidURL extends Error {
+    /** @param {number} errorType */
     constructor(errorType) {
         super()
         this.name = 'OtpauthInvalidURL'

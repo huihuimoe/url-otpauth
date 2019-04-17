@@ -28,6 +28,7 @@ const PossibleAlgorithms = ['SHA1', 'SHA256', 'SHA512', 'MD5']
  * OTP of type `hotp` have an additional `counter` field which contains the start value for the
  * HOTP counter. In all other cases this field is missing from the resulting object.
  *
+ * @param {string | URL} rawUrl
  **/
 export function parse(rawUrl) {
     const decode = decodeURIComponent

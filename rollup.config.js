@@ -1,8 +1,10 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
+const pkg = require('./package.json')
 
 const banner = `/*!
+* url-otpauth-ng v${pkg.version}
 * https://github.com/huihuimoe/url-otpauth-ng
 * Released under the MIT license
 */
@@ -32,7 +34,7 @@ export default [
             format: 'umd',
             ...outputSettings
         },
-        plugins: [terser(), ...plugins]
+        plugins: [...plugins, terser()]
     },
     {
         input,
@@ -50,7 +52,7 @@ export default [
             format: 'esm',
             ...outputSettings
         },
-        plugins: [terser(), ...plugins]
+        plugins: [...plugins, terser()]
     },
     {
         input,

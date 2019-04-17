@@ -63,7 +63,10 @@ export function parse(rawUrl) {
     //
 
     const label = parsed.pathname.substring(1)
-    const labelComponents = label.split(~label.indexOf(':') ? ':' : '%3A')
+    const labelComponents = label.split(
+        ~label.indexOf(':') ? /:(.*)/ : /%3A(.*)/,
+        2
+    )
     let issuer = ''
     let account = ''
 

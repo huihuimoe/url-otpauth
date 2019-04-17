@@ -9,7 +9,8 @@ export default [
             file: 'dist/url-otpauth-ng.min.js',
             format: 'umd',
             name: 'urlOtpauthNg',
-            sourcemap: true
+            sourcemap: true,
+            freeze: false
         },
         plugins: [
             resolve({
@@ -25,7 +26,8 @@ export default [
             file: 'dist/url-otpauth-ng.js',
             format: 'umd',
             name: 'urlOtpauthNg',
-            sourcemap: true
+            sourcemap: true,
+            freeze: false
         },
         plugins: [
             resolve({
@@ -39,7 +41,8 @@ export default [
         output: {
             file: 'dist/url-otpauth-ng.esm.min.mjs',
             format: 'esm',
-            sourcemap: true
+            sourcemap: true,
+            freeze: false
         },
         plugins: [
             resolve({
@@ -54,7 +57,8 @@ export default [
         output: {
             file: 'dist/url-otpauth-ng.esm.mjs',
             format: 'esm',
-            sourcemap: true
+            sourcemap: true,
+            freeze: false
         },
         plugins: [
             resolve({

@@ -2,7 +2,7 @@ export interface IOtpParseResult {
     type: string
     account: string
     key: string
-    issuer?: string
+    issuer: string
     digits: string
     algorithm?: string
     period?: string
